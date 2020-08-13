@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import './App.css';
 import Users from './pages/Users';
-import NewPlace from './pages/Place';
+import NewPlace from './pages/NewPlace';
 import MainNavigation from './components/MainNavigation/MainNavigation';
 import UserPlaces from './pages/UserPlaces';
 
