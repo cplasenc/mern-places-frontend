@@ -11,7 +11,7 @@ const DUMMY_PLACES = [
         address: 'direccion de prueba',
         location: {
             lat: 40.7484405,
-            long: -73.9878584
+            lng: -73.9878584
         },
         creator: 'u1'
     },
@@ -23,7 +23,7 @@ const DUMMY_PLACES = [
         address: 'direccion de prueba',
         location: {
             lat: 40.7484405,
-            long: -73.9878584
+            lng: -73.9878584
         },
         creator: 'u2'
     }

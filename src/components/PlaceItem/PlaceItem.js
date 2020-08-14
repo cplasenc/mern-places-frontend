@@ -3,6 +3,7 @@ import './PlaceItem.css';
 import Card from '../UIElements/Card/Card';
 import Button from '../Button/Button';
 import Modal from '../Modal/Modal';
+import Map from '../Map/Map';
 
 const PlaceItem = props => {
 
@@ -12,12 +13,12 @@ const PlaceItem = props => {
 
     return (
         <React.Fragment>
-                <Modal show={showMap} onCancel={closeMapHandler} header={props.address} contentClass='place-item__modal-content' footerClass='place-item__modal-actions' footer={<Button onClick={closeMapHandler}>CERRAR</Button>}>
-                    <div className='map-container'>
-                        <h2>MAPA</h2>
-                    </div>
-                </Modal>
-                <li className='place-item'>
+            <Modal show={showMap} onCancel={closeMapHandler} header={props.address} contentClass='place-item__modal-content' footerClass='place-item__modal-actions' footer={<Button onClick={closeMapHandler}>CERRAR</Button>}>
+                <div className='map-container'>
+                    <Map center={props.coordinates} zoom={16} />
+                </div>
+            </Modal>
+            <li className='place-item'>
                 <Card className='place-item__content'>
                     <div className='place-item__image'>
                         <img src={props.image} alt={props.title} />
