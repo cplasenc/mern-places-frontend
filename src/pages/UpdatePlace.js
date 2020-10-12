@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import Input from '../components/Input/Input';
 import Button from '../components/Button/Button';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../util/validators';
+import './PlaceForm.css';
 
 const DUMMY_PLACES = [
     {
@@ -44,13 +45,13 @@ const UpdatePlace = () => {
         );
     }
 
-    return <form>
+    return <form className='place-form'>
         <Input
             id='title'
             element='input'
             type='text'
             label='Título'
-            validator={[VALIDATOR_REQUIRE]}
+            validators={[VALIDATOR_REQUIRE()]}
             errorText='Por favor introduce un título válido'
             onInput={() => { }}
             value={identifiedPlace.title}
@@ -60,7 +61,7 @@ const UpdatePlace = () => {
             id='description'
             element='textarea'
             label='Descripción'
-            validator={[VALIDATOR_MINLENGTH(5)]}
+            validators={[VALIDATOR_MINLENGTH(5)]}
             errorText='Por favor introduce una descripción válida (min. 5 caracteres)'
             onInput={() => { }}
             value={identifiedPlace.description}
