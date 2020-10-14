@@ -17,7 +17,7 @@ const DUMMY_PLACES = [
     },
     {
         id: '2',
-        title: 'titulo',
+        title: 'titulo2',
         description: 'descripcion',
         imageUrl: 'https://s3-us-west-2.amazonaws.com/lasaga-blog/media/original_images/grupo_imagen.jpg',
         address: 'direccion de prueba',
