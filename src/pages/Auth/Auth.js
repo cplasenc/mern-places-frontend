@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './Auth.css';
 import Card from '../../components/UIElements/Card/Card';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
-import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH } from '../../util/validators';
+import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
 
 const Auth = () => {
-
-    const [formState, inputHandler] = useForm({
+    const [isLoginMode, setIsLoginMode] = useState(true);
+    const [formState, inputHandler, setFormData] = useForm({
         email: {
             value: '',
             isValid: false
@@ -25,10 +25,39 @@ const Auth = () => {
         console.log(formState.inputs);
     }
 
+    const switchModeHandler = () => {
+        if (!isLoginMode) {
+            setFormData({
+                ...formState.inputs,
+                name: undefined
+            }, formState.inputs.email.isValid && formState.inputs.password.isValid);
+        } else {
+            setFormData({
+                ...formState.inputs,
+                name: {
+                    value: '',
+                    isValid: false
+                }
+            }, false);
+        }
+        setIsLoginMode(prevMode => !prevMode);
+    };
+
     return <Card className='authentication'>
         <h2>Iniciar sesión</h2>
-    <hr />
+        <hr />
         <form onSubmit={authSubmitHandler}>
+            {!isLoginMode && (
+                <Input
+                    element='input'
+                    id='name'
+                    type='text'
+                    label='Tu nombre'
+                    validators={[VALIDATOR_REQUIRE()]}
+                    errorText='Introduce un nombre'
+                    onInput={inputHandler}
+                />
+            )}
             <Input
                 element='input'
                 id='email'
@@ -47,8 +76,11 @@ const Auth = () => {
                 errorText='Introduce una contraseña válida con un mínimo de 5 caracteres'
                 onInput={inputHandler}
             />
-            <Button type='submit' disabled={!formState.isValid}>Iniciar sesión</Button>
+            <Button type='submit' disabled={!formState.isValid}>{isLoginMode ? 'Iniciar sesión' : 'Registrarse'}</Button>
         </form>
+
+        <Button inverse onClick={switchModeHandler}>{isLoginMode ? 'Registrarse' : 'Iniciar Sesión'}</Button>
+
     </Card>
 };
 
