@@ -21,7 +21,6 @@ const App = () => {
     setIsLoggedIn(false);
   }, []);
 
-
   let routes;
 
   if (isLoggedIn) {
@@ -51,7 +50,7 @@ const App = () => {
       <BrowserRouter>
         <MainNavigation />
         <main>
-            {routes}
+          {routes}
         </main>
       </BrowserRouter>
     </AuthContext.Provider>
