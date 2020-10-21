@@ -6,7 +6,7 @@ import NavLinks from '../NavLinks/NavLinks';
 import SidebarNavigation from '../SidebarNavigation/SidebarNavigation';
 import Backdrop from '../UIElements/Backdrop/Backdrop';
 
-const MainNavigation = props => {
+const MainNavigation = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const openSidebar = () => {
