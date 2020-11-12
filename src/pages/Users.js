@@ -1,12 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import UsersList from '../components/UsersList/UsersList';
+import ErrorModal from '../components/UIElements/ErrorModal/ErrorModal';
+import Spinner from '../components/UIElements/Spinner/LoadingSpinner';
+
 
 const Users = () => {
-    const USERS = [
-        { id: 'u1', name: 'Pepe', image: 'https://s3-us-west-2.amazonaws.com/lasaga-blog/media/original_images/grupo_imagen.jpg', places: 3 }
-    ];
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState();
+    const [loadedUsers, setLoadedUsers] = useState();
 
-    return <UsersList items={USERS} />;
+    useEffect(() => {
+        const sendRequest = async () => {
+            setIsLoading(true);
+            try {
+                const response = await fetch('http://localhost:5000/api/users');
+
+                const responseData = await response.json();
+
+                if(!response.ok) {
+                    throw new Error(responseData.message);
+                }
+
+                setLoadedUsers(responseData.users);
+                setIsLoading(false);
+
+            } catch (err) {
+                setIsLoading(false);
+                setError(err.message);
+            }
+            setIsLoading(false);
+        };
+        sendRequest();
+    }, []);
+
+    const errorHandler = () => {
+        setError(null);
+    };    
+
+    return (
+        <React.Fragment>
+            <ErrorModal error={error} onClear={errorHandler} />
+            {isLoading && (
+                <div className='center'>
+                    <Spinner />
+                </div>
+            )}
+            {!isLoading && loadedUsers && <UsersList items={loadedUsers} />}
+        </React.Fragment>
+        );
 };
 
 export default Users;

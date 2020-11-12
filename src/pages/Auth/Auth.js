@@ -30,11 +30,35 @@ const Auth = () => {
     const authSubmitHandler = async event => {
         event.preventDefault();
 
+        setIsLoading(true);
+
         if (isLoginMode) {
+            try {
+                const response = await fetch('http://localhost:5000/api/users/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: formState.inputs.email.value,
+                        password: formState.inputs.password.value
+                    })
+                });
+
+                const responseData = await response.json();
+                if (!response.ok) {
+                    throw new Error(responseData.nessage);
+                }
+
+                setIsLoading(false);
+                auth.login();
+            } catch (err) {
+                setIsLoading(false);
+                setError(err.message || 'Algo no ha funcionado como debería, vuelve a intentarlo');
+            }
+
         } else {
             try {
-                setIsLoading(true);
-                
                 const response = await fetch('http://localhost:5000/api/users/signup', {
                     method: 'POST',
                     headers: {
@@ -46,16 +70,16 @@ const Auth = () => {
                         password: formState.inputs.password.value
                     })
                 });
-                
+
                 const responseData = await response.json();
-                if(!response.ok) {
+                if (!response.ok) {
                     throw new Error(responseData.nessage);
                 }
                 console.log(responseData);
                 setIsLoading(false);
                 auth.login();
             } catch (err) {
-                console.log(err);
+
                 setIsLoading(false);
                 setError(err.message || 'Algo no ha funcionado como debería, vuelve a intentarlo');
             }
@@ -85,49 +109,50 @@ const Auth = () => {
     };
 
     return (
-    <React.Fragment>
-    <ErrorModal error={error} onClear={errorHandler} />
-    <Card className='authentication'>
-        {isLoading && <Spinner asOverlay />}
-        <h2>Iniciar sesión</h2>
-        <hr />
-        <form onSubmit={authSubmitHandler}>
-            {!isLoginMode && (
-                <Input
-                    element='input'
-                    id='name'
-                    type='text'
-                    label='Tu nombre'
-                    validators={[VALIDATOR_REQUIRE()]}
-                    errorText='Introduce un nombre'
-                    onInput={inputHandler}
-                />
-            )}
-            <Input
-                element='input'
-                id='email'
-                type='email'
-                label='Correo electrónico'
-                validators={[VALIDATOR_EMAIL()]}
-                errorText='El formato no es correcto'
-                onInput={inputHandler}
-            />
-            <Input
-                element='input'
-                id='password'
-                type='password'
-                label='Contraseña'
-                validators={[VALIDATOR_MINLENGTH(5)]}
-                errorText='Introduce una contraseña válida con un mínimo de 5 caracteres'
-                onInput={inputHandler}
-            />
-            <Button type='submit' disabled={!formState.isValid}>{isLoginMode ? 'Iniciar sesión' : 'Registrarse'}</Button>
-        </form>
+        <React.Fragment>
+            <ErrorModal error={error} onClear={errorHandler} />
+            <Card className='authentication'>
+                {isLoading && <Spinner asOverlay />}
+                <h2>Iniciar sesión</h2>
+                <hr />
+                <form onSubmit={authSubmitHandler}>
+                    {!isLoginMode && (
+                        <Input
+                            element='input'
+                            id='name'
+                            type='text'
+                            label='Tu nombre'
+                            validators={[VALIDATOR_REQUIRE()]}
+                            errorText='Introduce un nombre'
+                            onInput={inputHandler}
+                        />
+                    )}
+                    <Input
+                        element='input'
+                        id='email'
+                        type='email'
+                        label='Correo electrónico'
+                        validators={[VALIDATOR_EMAIL()]}
+                        errorText='El formato no es correcto'
+                        onInput={inputHandler}
+                    />
+                    <Input
+                        element='input'
+                        id='password'
+                        type='password'
+                        label='Contraseña'
+                        validators={[VALIDATOR_MINLENGTH(5)]}
+                        errorText='Introduce una contraseña válida con un mínimo de 5 caracteres'
+                        onInput={inputHandler}
+                    />
+                    <Button type='submit' disabled={!formState.isValid}>{isLoginMode ? 'Iniciar sesión' : 'Registrarse'}</Button>
+                </form>
 
-        <Button inverse onClick={switchModeHandler}>{isLoginMode ? 'Registrarse' : 'Iniciar Sesión'}</Button>
+                <Button inverse onClick={switchModeHandler}>{isLoginMode ? 'Registrarse' : 'Iniciar Sesión'}</Button>
 
-    </Card>
-    </React.Fragment>
-)};
+            </Card>
+        </React.Fragment>
+    )
+};
 
 export default Auth;
