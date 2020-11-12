@@ -7,10 +7,15 @@ import Button from '../../components/Button/Button';
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../../util/validators';
 import { useForm } from '../../hooks/form-hook';
 import { AuthContext } from '../../context/auth-context';
+import ErrorModal from '../../components/UIElements/ErrorModal/ErrorModal';
+import Spinner from '../../components/UIElements/Spinner/LoadingSpinner';
 
 const Auth = () => {
     const auth = useContext(AuthContext);
     const [isLoginMode, setIsLoginMode] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState();
+
     const [formState, inputHandler, setFormData] = useForm({
         email: {
             value: '',
@@ -28,7 +33,9 @@ const Auth = () => {
         if (isLoginMode) {
         } else {
             try {
-                const response = await fetch('http://localhost:500/api/users/signup', {
+                setIsLoading(true);
+                
+                const response = await fetch('http://localhost:5000/api/users/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -42,11 +49,14 @@ const Auth = () => {
                 
                 const responseData = await response.json();
                 console.log(responseData);
+                setIsLoading(false);
+                auth.login();
             } catch (error) {
                 console.log(error);
+                setError(error.message || 'Algo no ha funcionado como debía, vuelve a intentarlo');
             }
         }
-
+        setIsLoading(false);
 
         auth.login();
     };
@@ -70,6 +80,7 @@ const Auth = () => {
     };
 
     return <Card className='authentication'>
+        {isLoading && <Spinner asOverlay />}
         <h2>Iniciar sesión</h2>
         <hr />
         <form onSubmit={authSubmitHandler}>
