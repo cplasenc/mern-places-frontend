@@ -48,17 +48,18 @@ const Auth = () => {
                 });
                 
                 const responseData = await response.json();
+                if(!response.ok) {
+                    throw new Error(responseData.nessage);
+                }
                 console.log(responseData);
                 setIsLoading(false);
                 auth.login();
-            } catch (error) {
-                console.log(error);
-                setError(error.message || 'Algo no ha funcionado como debía, vuelve a intentarlo');
+            } catch (err) {
+                console.log(err);
+                setIsLoading(false);
+                setError(err.message || 'Algo no ha funcionado como debería, vuelve a intentarlo');
             }
         }
-        setIsLoading(false);
-
-        auth.login();
     };
 
     const switchModeHandler = () => {
@@ -79,7 +80,14 @@ const Auth = () => {
         setIsLoginMode(prevMode => !prevMode);
     };
 
-    return <Card className='authentication'>
+    const errorHandler = () => {
+        setError(null);
+    };
+
+    return (
+    <React.Fragment>
+    <ErrorModal error={error} onClear={errorHandler} />
+    <Card className='authentication'>
         {isLoading && <Spinner asOverlay />}
         <h2>Iniciar sesión</h2>
         <hr />
@@ -119,6 +127,7 @@ const Auth = () => {
         <Button inverse onClick={switchModeHandler}>{isLoginMode ? 'Registrarse' : 'Iniciar Sesión'}</Button>
 
     </Card>
-};
+    </React.Fragment>
+)};
 
 export default Auth;
