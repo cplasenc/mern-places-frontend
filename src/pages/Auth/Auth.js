@@ -9,12 +9,14 @@ import { useForm } from '../../hooks/form-hook';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from '../../components/UIElements/ErrorModal/ErrorModal';
 import Spinner from '../../components/UIElements/Spinner/LoadingSpinner';
+import { useHttpClient } from '../../hooks/http-hook';
 
 const Auth = () => {
     const auth = useContext(AuthContext);
     const [isLoginMode, setIsLoginMode] = useState(true);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState();
+    //const [isLoading, setIsLoading] = useState(false);
+    //const [error, setError] = useState();
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
     const [formState, inputHandler, setFormData] = useForm({
         email: {
@@ -30,58 +32,42 @@ const Auth = () => {
     const authSubmitHandler = async event => {
         event.preventDefault();
 
-        setIsLoading(true);
-
         if (isLoginMode) {
             try {
-                const response = await fetch('http://localhost:5000/api/users/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
+                await sendRequest(
+                    'http://localhost:5000/api/users/login',
+                    'POST',
+                    JSON.stringify({
                         email: formState.inputs.email.value,
                         password: formState.inputs.password.value
-                    })
-                });
-
-                const responseData = await response.json();
-                if (!response.ok) {
-                    throw new Error(responseData.nessage);
-                }
-
-                setIsLoading(false);
-                auth.login();
-            } catch (err) {
-                setIsLoading(false);
-                setError(err.message || 'Algo no ha funcionado como debería, vuelve a intentarlo');
-            }
-
-        } else {
-            try {
-                const response = await fetch('http://localhost:5000/api/users/signup', {
-                    method: 'POST',
-                    headers: {
+                    }),
+                    {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
+                );
+                auth.login();
+
+            } catch (err) {
+
+            }
+        } else {
+            try {
+                await sendRequest(
+                    'http://localhost:5000/api/users/signup',
+                    'POST',
+                    JSON.stringify({
                         name: formState.inputs.name.value,
                         email: formState.inputs.email.value,
                         password: formState.inputs.password.value
-                    })
-                });
+                    }),
+                    {
+                        'Content-Type': 'application/json'
+                    },
+                );
 
-                const responseData = await response.json();
-                if (!response.ok) {
-                    throw new Error(responseData.nessage);
-                }
-                console.log(responseData);
-                setIsLoading(false);
                 auth.login();
             } catch (err) {
 
-                setIsLoading(false);
-                setError(err.message || 'Algo no ha funcionado como debería, vuelve a intentarlo');
             }
         }
     };
@@ -104,13 +90,9 @@ const Auth = () => {
         setIsLoginMode(prevMode => !prevMode);
     };
 
-    const errorHandler = () => {
-        setError(null);
-    };
-
     return (
         <React.Fragment>
-            <ErrorModal error={error} onClear={errorHandler} />
+            <ErrorModal error={error} onClear={clearError} />
             <Card className='authentication'>
                 {isLoading && <Spinner asOverlay />}
                 <h2>Iniciar sesión</h2>
