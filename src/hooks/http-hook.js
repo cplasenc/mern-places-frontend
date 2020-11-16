@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 
-export const useHttpCliente = () => {
+export const useHttpClient = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
 
@@ -39,7 +39,6 @@ export const useHttpCliente = () => {
             setIsLoading(false);
             throw err;
         }
-        setIsLoading(false);
     }, []);
 
     const clearError = () => {
