@@ -14,8 +14,6 @@ import { useHttpClient } from '../../hooks/http-hook';
 const Auth = () => {
     const auth = useContext(AuthContext);
     const [isLoginMode, setIsLoginMode] = useState(true);
-    //const [isLoading, setIsLoading] = useState(false);
-    //const [error, setError] = useState();
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
     const [formState, inputHandler, setFormData] = useForm({
