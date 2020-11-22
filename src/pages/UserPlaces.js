@@ -33,7 +33,6 @@ const UserPlaces = () => {
                 </div>
             )}
             {!isLoading && loadedPlaces && <PlaceList items={loadedPlaces} />}
-            <PlaceList items={loadedPlaces} />
         </React.Fragment>
     );
 };
