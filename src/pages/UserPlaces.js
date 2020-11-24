@@ -3,7 +3,6 @@ import PlaceList from '../components/PlaceList/PlaceList';
 import { useParams } from 'react-router-dom';
 import { useHttpClient } from '../hooks/http-hook';
 import ErrorModal from '../components/UIElements/ErrorModal/ErrorModal';
-import Spinner from '../components/UIElements/Spinner/LoadingSpinner';
 import LoadingSpinner from '../components/UIElements/Spinner/LoadingSpinner';
 
 const UserPlaces = () => {
