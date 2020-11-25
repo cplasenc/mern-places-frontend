@@ -5,12 +5,17 @@ import Button from '../Button/Button';
 import Modal from '../Modal/Modal';
 import Map from '../Map/Map';
 import { AuthContext } from '../../context/auth-context';
+import { useHttpClient } from '../../hooks/http-hook';
+import LoadingSpinner from '../UIElements/Spinner/LoadingSpinner';
+import ErrorModal from '../UIElements/ErrorModal/ErrorModal';
 
 const PlaceItem = props => {
 
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
     const auth = useContext(AuthContext);
     const [showMap, setShowMap] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+
     const openMapHandler = () => setShowMap(true);
     const closeMapHandler = () => setShowMap(false);
 
@@ -22,13 +27,21 @@ const PlaceItem = props => {
         setShowConfirmModal(false);
     };
 
-    const confirmDeleteHandler = () => {
+    const confirmDeleteHandler = async () => {
         setShowConfirmModal(false);
-        console.log('Borrando...');
+        try {
+            await sendRequest(
+                `http://localhost:5000/api/places/${props.id}`,
+                'DELETE'
+            );
+            props.onDelete(props.id);
+        } catch (err) {
+        }
     };
 
     return (
         <React.Fragment>
+            <ErrorModal error={error} onClear={clearError} />
             <Modal show={showMap} onCancel={closeMapHandler} header={props.address} contentClass='place-item__modal-content' footerClass='place-item__modal-actions' footer={<Button onClick={closeMapHandler}>CERRAR</Button>}>
                 <div className='map-container'>
                     <Map center={props.coordinates} zoom={16} />
@@ -49,6 +62,7 @@ const PlaceItem = props => {
             </Modal>
             <li className='place-item'>
                 <Card className='place-item__content'>
+                    {isLoading && <LoadingSpinner asOverlay />}
                     <div className='place-item__image'>
                         <img src={props.image} alt={props.title} />
                     </div>
