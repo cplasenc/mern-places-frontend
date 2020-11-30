@@ -45,7 +45,6 @@ const NewPlace = () => {
         );
         history.push('/')
         } catch (err) {
-
         }
     };
 
