@@ -6,8 +6,8 @@ import NewPlace from './pages/NewPlace';
 import UpdatePlace from './pages/UpdatePlace';
 import MainNavigation from './components/MainNavigation/MainNavigation';
 import UserPlaces from './pages/UserPlaces';
-import Auth from './pages/Auth/Auth';
 import { AuthContext } from './context/auth-context';
+import Auth from './pages/Auth/Auth';
 
 const App = () => {
 
