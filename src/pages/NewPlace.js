@@ -9,6 +9,7 @@ import { AuthContext } from '../context/auth-context';
 import ErrorModal from '../components/UIElements/ErrorModal/ErrorModal';
 import Spinner from '../components/UIElements/Spinner/LoadingSpinner';
 import { useHistory } from 'react-router-dom';
+import ImageUpload from '../components/ImageUpload/imageUpload';
 
 const NewPlace = () => {
     const auth = useContext(AuthContext);
@@ -75,6 +76,7 @@ const NewPlace = () => {
                     errorText='Introduce una dirección válida'
                     onInput={inputHandler}
                 />
+                <ImageUpload id='image' onInput={inputHandler} errorText='Selecciona una image' />
                 <Button type='submit' disabled={!formState.isValid}>
                     AÑADIR LUGAR
             </Button>
