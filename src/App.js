@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 import './App.css';
 import Users from './pages/Users';
@@ -14,6 +14,13 @@ const App = () => {
   const [token, setToken] = useState(false);
   const [userId, setUserId] = useState(false);
 
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem('userData'));
+    if(storedData && storedData.token) {
+      login(storedData.userId, storedData.token);
+    }
+  }, [login]);
+
   const login = useCallback((uid, token) => {
     setToken(token);
     localStorage.setItem('userData', JSON.stringify({userId: uid, token: token }));
@@ -23,6 +30,7 @@ const App = () => {
   const logout = useCallback(() => {
     setToken(null);
     setUserId(null);
+    localStorage.removeItem('userData');
   }, []);
 
   let routes;
